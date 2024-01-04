@@ -1,15 +1,16 @@
 from sqlalchemy.orm import Session
+
 from employees.models import Employee
 from employees.schemas import EmployeeCreate
 
 
 def create_employee(db: Session, employee: EmployeeCreate):
-    db_item = Employee(id=employee.id, name=employee.name, position=employee.position)
+    new_employee = Employee(**employee.model_dump())
 
-    db.add(db_item)
+    db.add(new_employee)
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(new_employee)
+    return new_employee
 
 
 def get_employees(db: Session, skip: int = 0, limit: int = 100):
@@ -21,17 +22,17 @@ def get_employee_by_id(db: Session, employee_id: int):
 
 
 def update_employee(db: Session, employee_id: int, name: str, position: str):
-    db_item = get_employee_by_id(db=db, employee_id=employee_id)
+    new_employee = get_employee_by_id(db=db, employee_id=employee_id)
 
-    db_item.name = name
-    db_item.position = position
+    new_employee.name = name
+    new_employee.position = position
 
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(new_employee)
+    return new_employee
 
 
 def delete_employee(db: Session, employee_id: int):
-    db_item = get_employee_by_id(db=db, employee_id=employee_id)
-    db.delete(db_item)
+    employee = get_employee_by_id(db=db, employee_id=employee_id)
+    db.delete(employee)
     db.commit()

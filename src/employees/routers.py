@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create/", response_model=EmployeeCreate)
+@router.post("/create/")
 async def create_employee(employee: EmployeeCreate, db: Session = Depends(get_db)):
     return crud.create_employee(db=db, employee=employee)
 
