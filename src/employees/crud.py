@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
-from models import Employee
-from schemas import EmployeeSchema
+from employees.models import Employee
+from employees.schemas import EmployeeCreate
 
 
-def create_employee(db: Session, employee: EmployeeSchema):
-    db_item = Employee(name=employee.name, position=employee.position)
+def create_employee(db: Session, employee: EmployeeCreate):
+    db_item = Employee(id=employee.id, name=employee.name, position=employee.position)
+
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

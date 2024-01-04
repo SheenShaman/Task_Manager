@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from employees import crud
-from schemas import EmployeeSchema
+from employees.schemas import EmployeeCreate
 from utils.utils import get_db
 
 router = APIRouter(
@@ -11,8 +11,8 @@ router = APIRouter(
 )
 
 
-@router.post("/create/")
-async def create_employee(employee: EmployeeSchema, db: Session = Depends(get_db)):
+@router.post("/create/", response_model=EmployeeCreate)
+async def create_employee(employee: EmployeeCreate, db: Session = Depends(get_db)):
     return crud.create_employee(db=db, employee=employee)
 
 
