@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from tasks import crud
-from tasks.schemas import TaskCreate, TaskUpdate
+from tasks.task_schemas import TaskCreate, TaskUpdate
 from utils.utils import get_db
 
 router = APIRouter(

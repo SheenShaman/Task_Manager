@@ -1,12 +1,20 @@
 from sqlalchemy.orm import Session
 
+from tasks import task_schemas
 from tasks.models import Task
-from tasks.schemas import TaskCreate, TaskUpdate
+from tasks.task_schemas import TaskCreate, TaskUpdate
 
 
 def create_task(db: Session, task: TaskCreate):
-    new_task = Task(**task.model_dump())
-
+    # new_task = Task(**task.model_dump())
+    new_task = Task(
+        name=task.name,
+        is_parent_task=task.is_parent_task,
+        deadline=task.deadline,
+        status=task.status,
+        exicuter_id=task.exicuter_id,
+        parent_task_id=task.parent_task_id,
+    )
     db.add(new_task)
     db.commit()
     db.refresh(new_task)
