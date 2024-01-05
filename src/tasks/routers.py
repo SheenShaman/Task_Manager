@@ -32,16 +32,6 @@ async def update_task(task_update: TaskUpdate, task_id: int, db: Session = Depen
     return crud.update_task(db=db, task=task, task_update=task_update)
 
 
-# @router.patch("/update/{task_id}")
-# async def update_task(
-#         task_id: int,
-#         name: str, is_parent_task: bool, deadline: datetime, status: str,
-#         parent_task_id: int, employee_id: int,
-#         db: Session = Depends(get_db)):
-#     return crud.update_task(db=db, task_id=task_id, name=name, is_parent_task=is_parent_task, deadline=deadline,
-#                             status=status,
-#         parent_task_id=parent_task_id, employee_id=employee_id)
-
 @router.delete("/delete/{task_id}")
 async def delete_task(task_id: int, db: Session = Depends(get_db)):
     return crud.delete_task(db=db, task_id=task_id)
