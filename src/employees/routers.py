@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from employees import crud
-from employees.schemas import EmployeeCreate
+from employees.schemas import EmployeeCreate, EmployeeUpdate
 from utils.utils import get_db
 
 router = APIRouter(
@@ -27,8 +27,9 @@ async def get_employee(employee_id: int, db: Session = Depends(get_db)):
 
 
 @router.patch("/update/{employee_id}")
-async def update_employee(employee_id: int, name: str, position: str, db: Session = Depends(get_db)):
-    return crud.update_employee(db=db, employee_id=employee_id, name=name, position=position)
+async def update_employee(employee_update: EmployeeUpdate, employee_id: int, db: Session = Depends(get_db)):
+    employee = crud.get_employee_by_id(db=db, employee_id=employee_id)
+    return crud.update_employee(db=db, employee=employee, employee_update=employee_update)
 
 
 @router.delete("/delete/{employee_id}")

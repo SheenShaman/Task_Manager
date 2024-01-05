@@ -10,3 +10,7 @@ class EmployeeBase(BaseModel):
 class EmployeeCreate(EmployeeBase):
     class Config:
         orm_mode = True
+
+
+class EmployeeUpdate(EmployeeCreate):
+    pass
