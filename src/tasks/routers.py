@@ -1,10 +1,8 @@
-from datetime import datetime
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from tasks import crud
-from tasks.schemas import TaskCreate
+from tasks.schemas import TaskCreate, TaskUpdate
 from utils.utils import get_db
 
 router = APIRouter(
@@ -26,6 +24,12 @@ async def get_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
 @router.get("/{task_id}")
 async def get_task(task_id: int, db: Session = Depends(get_db)):
     return crud.get_task_by_id(db=db, task_id=task_id)
+
+
+@router.patch("/update/{task_id}")
+async def update_task(task_update: TaskUpdate, task_id: int, db: Session = Depends(get_db)):
+    task = crud.get_task_by_id(db=db, task_id=task_id)
+    return crud.update_task(db=db, task=task, task_update=task_update)
 
 
 # @router.patch("/update/{task_id}")

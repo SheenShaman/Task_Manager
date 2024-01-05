@@ -14,3 +14,7 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     class Config:
         orm_mode = True
+
+
+class TaskUpdate(TaskCreate):
+    pass
