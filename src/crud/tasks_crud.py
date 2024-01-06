@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 
-from tasks import task_schemas
-from tasks.models import Task
-from tasks.task_schemas import TaskCreate, TaskUpdate
+from src.models.tasks_model import Task
+from src.schemas.tasks_schemas import TaskCreate, TaskUpdate
 
 
 def create_task(db: Session, task: TaskCreate):
@@ -12,7 +11,7 @@ def create_task(db: Session, task: TaskCreate):
         is_parent_task=task.is_parent_task,
         deadline=task.deadline,
         status=task.status,
-        exicuter_id=task.exicuter_id,
+        executor_id=task.executor_id,
         parent_task_id=task.parent_task_id,
     )
     db.add(new_task)
