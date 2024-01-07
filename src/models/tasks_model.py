@@ -3,7 +3,7 @@ from enum import Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy import String, Integer, Column, ForeignKey, DateTime, Enum as EnumType
 
-from src.models import Base
+from models import Base
 
 
 class TaskStatus(str, Enum):

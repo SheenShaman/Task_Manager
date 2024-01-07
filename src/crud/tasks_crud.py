@@ -3,9 +3,9 @@ from typing import List, Type, Union
 from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Session, joinedload
 
-from src.models import Task, Employee
-from src.models.tasks_model import TaskStatus
-from src.schemas.tasks_schemas import TaskCreate, TaskUpdate, ImportantTask
+from models import Task, Employee
+from models.tasks_model import TaskStatus
+from schemas.tasks_schemas import TaskCreate, TaskUpdate, ImportantTask
 
 
 class TaskCRUD:

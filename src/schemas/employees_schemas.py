@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-from src.schemas.tasks_schemas import TaskRead
+from schemas.tasks_schemas import TaskRead
 
 
 class EmployeeRead(BaseModel):

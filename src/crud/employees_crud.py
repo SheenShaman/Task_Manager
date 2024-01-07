@@ -2,8 +2,8 @@ from typing import List, Type, Union
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
-from src.models import Employee, Task
-from src.schemas.employees_schemas import EmployeeCreate, EmployeeUpdate
+from models import Employee, Task
+from schemas.employees_schemas import EmployeeCreate, EmployeeUpdate
 
 
 class EmployeeCRUD:
@@ -12,12 +12,12 @@ class EmployeeCRUD:
 
     def create_employee(self, employee_schema: EmployeeCreate) -> Employee:
         """ Create Employee """
-        # is_busy_value = employee_schema.is_busy if employee_schema.is_busy is not None else False
-        #
-        # new_employee = Employee(name=employee_schema.name,
-        #                         position=employee_schema.position,
-        #                         is_busy=is_busy_value)
-        new_employee = Employee(**employee_schema.model_dump(exclude_unset=True))
+        is_busy_value = employee_schema.is_busy if employee_schema.is_busy is not None else False
+
+        new_employee = Employee(name=employee_schema.name,
+                                position=employee_schema.position,
+                                is_busy=is_busy_value)
+        # new_employee = Employee(**employee_schema.model_dump(exclude_unset=True))
         self.db.add(new_employee)
         self.db.commit()
         self.db.refresh(new_employee)

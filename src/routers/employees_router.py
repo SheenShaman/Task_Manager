@@ -2,9 +2,9 @@ from typing import List, Type
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from src.db.database import get_db
-from src.crud.employees_crud import EmployeeCRUD
-from src.schemas.employees_schemas import EmployeeRead, EmployeeCreate, EmployeeUpdate
+from db.database import get_db
+from crud.employees_crud import EmployeeCRUD
+from schemas.employees_schemas import EmployeeRead, EmployeeCreate, EmployeeUpdate
 
 router = APIRouter(
     prefix="/employees",

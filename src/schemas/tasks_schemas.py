@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
-from src.models.tasks_model import TaskStatus
+from models.tasks_model import TaskStatus
 
 
 class TaskRead(BaseModel):
