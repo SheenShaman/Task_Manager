@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from typing import List, Type
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from src.crud import tasks_crud
-from src.schemas.tasks_schemas import TaskCreate, TaskUpdate
-from src.db.database import get_db
+from db.database import get_db
+from crud.tasks_crud import TaskCRUD
+from schemas.tasks_schemas import TaskRead, TaskCreate, TaskUpdate
 
 router = APIRouter(
     prefix="/tasks",
@@ -11,27 +12,60 @@ router = APIRouter(
 )
 
 
-@router.post("/create/")
-async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
-    return tasks_crud.create_task(db=db, task=task)
+@router.post("/create/", response_model=TaskRead)
+def create_task(task_schema: TaskCreate, db: Session = Depends(get_db)) -> TaskRead:
+    """ Create Task """
+    try:
+        task_crud = TaskCRUD(db=db)
+        created_task = task_crud.create_task(task_schema=task_schema)
+        return created_task
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/")
-async def get_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return tasks_crud.get_tasks(db=db, skip=skip, limit=limit)
+@router.get("/", response_model=List[TaskRead])
+def get_tasks(db: Session = Depends(get_db)) -> List[Type[TaskRead]]:
+    """ Get Tasks """
+    try:
+        task_crud = TaskCRUD(db=db)
+        tasks = task_crud.get_tasks()
+        if tasks is None:
+            raise HTTPException(status_code=404, detail="Tasks not found")
+        return tasks
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{task_id}")
-async def get_task(task_id: int, db: Session = Depends(get_db)):
-    return tasks_crud.get_task_by_id(db=db, task_id=task_id)
+@router.get("/{task_id}", response_model=TaskRead)
+def get_task(task_id: int, db: Session = Depends(get_db)) -> TaskRead:
+    """ Get Task """
+    try:
+        task_crud = TaskCRUD(db=db)
+        task = task_crud.get_task_by_id(task_id=task_id)
+        if task is None:
+            raise HTTPException(status_code=404, detail="Task not found")
+        return task
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.patch("/update/{task_id}")
-async def update_task(task_update: TaskUpdate, task_id: int, db: Session = Depends(get_db)):
-    task = tasks_crud.get_task_by_id(db=db, task_id=task_id)
-    return tasks_crud.update_task(db=db, task=task, task_update=task_update)
+def update_task(task_schema: TaskUpdate, task_id: int, db: Session = Depends(get_db)) -> TaskRead:
+    """ Update Task """
+    try:
+        task_crud = TaskCRUD(db=db)
+        updated_task = task_crud.update_task(task_id=task_id, task_schema=task_schema)
+        return updated_task
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/delete/{task_id}")
-async def delete_task(task_id: int, db: Session = Depends(get_db)):
-    return tasks_crud.delete_task(db=db, task_id=task_id)
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    """ Delete Task """
+    try:
+        task_crud = TaskCRUD(db=db)
+        deleted_task = task_crud.delete_task(task_id=task_id)
+        return deleted_task
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
