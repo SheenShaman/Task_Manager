@@ -2,9 +2,9 @@ from typing import List, Type
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from db.database import get_db
-from crud.tasks_crud import TaskCRUD
-from schemas.tasks_schemas import TaskRead, TaskCreate, TaskUpdate
+from src.db.database import get_db
+from src.crud.tasks_crud import TaskCRUD
+from src.schemas.tasks_schemas import TaskRead, TaskCreate, TaskUpdate, ImportantTask
 
 router = APIRouter(
     prefix="/tasks",
@@ -47,6 +47,23 @@ def get_task(task_id: int, db: Session = Depends(get_db)) -> TaskRead:
         return task
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get('/important_tasks/', response_model=List[ImportantTask])
+def get_important_tasks(db: Session = Depends(get_db)) -> List[ImportantTask]:
+    """  """
+    try:
+        task_crud = TaskCRUD(db=db)
+        important_tasks = task_crud.get_important_tasks()
+        if not important_tasks:
+            raise HTTPException(status_code=404, detail='Important tasks not founded')
+        return important_tasks
+    except HTTPException as e:
+        print(f"Exception details: {e.detail}")
+        raise e
+    except Exception as e:
+        print(f"Unexpected exception: {str(e)}")
+        raise HTTPException(status_code=500, detail='Internal Server Error')
 
 
 @router.patch("/update/{task_id}")

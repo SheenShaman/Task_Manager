@@ -1,10 +1,9 @@
 import datetime
 from enum import Enum
-
 from sqlalchemy.orm import relationship
+from sqlalchemy import String, Integer, Column, ForeignKey, DateTime, Enum as EnumType
 
 from src.models import Base
-from sqlalchemy import String, Integer, Column, ForeignKey, DateTime, Enum as EnumType
 
 
 class TaskStatus(str, Enum):

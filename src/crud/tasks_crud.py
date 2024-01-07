@@ -1,8 +1,11 @@
 from typing import List, Type, Union
-from sqlalchemy.orm import Session
 
-from models import Task
-from schemas.tasks_schemas import TaskCreate, TaskUpdate
+from sqlalchemy import and_, or_, func
+from sqlalchemy.orm import Session, joinedload
+
+from src.models import Task, Employee
+from src.models.tasks_model import TaskStatus
+from src.schemas.tasks_schemas import TaskCreate, TaskUpdate, ImportantTask
 
 
 class TaskCRUD:
@@ -42,3 +45,29 @@ class TaskCRUD:
             self.db.delete(task)
             self.db.commit()
         return task
+
+    def get_important_tasks(self) -> List[ImportantTask]:
+        """  """
+        important_tasks = (self.db.query(Task)
+                           .filter(and_(Task.status == TaskStatus.NOT_STARTED,
+                                        Task.subtasks.any(Task.status == TaskStatus.STARTED)))
+                           .options(joinedload(Task.executor))
+                           .all())
+
+        important_tasks_list = []
+        for task in important_tasks:
+            suitable_employee = (self.db.query(Employee)
+                                 .outerjoin(Task, Employee.id == Task.executor_id)
+                                 .group_by(Employee.id)
+                                 .having(or_(Employee.id == task.executor_id, func.count(Task.id) <= 2))
+                                 .order_by(func.count(Task.id))
+                                 .first())
+
+            important_task = ImportantTask(
+                title=task.title,
+                deadline=task.deadline,
+                executor_name=suitable_employee.name if suitable_employee else None
+            )
+            important_tasks_list.append(important_task)
+
+        return important_tasks_list

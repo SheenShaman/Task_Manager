@@ -18,6 +18,12 @@ class TaskRead(BaseModel):
         from_attributes = True
 
 
+class ImportantTask(BaseModel):
+    title: str
+    deadline: datetime
+    executor_name: Optional[str] = None
+
+
 class TaskCreate(BaseModel):
     parent_task_id: Optional[int] = None
     title: str
