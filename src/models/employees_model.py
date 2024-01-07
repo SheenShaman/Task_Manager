@@ -1,7 +1,7 @@
+from sqlalchemy import String, Integer, Boolean, Column
 from sqlalchemy.orm import relationship
 
 from src.models import Base
-from sqlalchemy import String, Integer, Boolean, Column
 
 
 class Employee(Base):

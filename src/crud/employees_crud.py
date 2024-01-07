@@ -1,8 +1,9 @@
 from typing import List, Type, Union
-from sqlalchemy.orm import Session
+from sqlalchemy import func
+from sqlalchemy.orm import Session, joinedload
 
-from models import Employee
-from schemas.employees_schemas import EmployeeCreate, EmployeeUpdate
+from src.models import Employee, Task
+from src.schemas.employees_schemas import EmployeeCreate, EmployeeUpdate
 
 
 class EmployeeCRUD:
@@ -29,6 +30,18 @@ class EmployeeCRUD:
     def get_employee_by_id(self, employee_id: int) -> Union[Employee, None]:
         """ Get Employee by id """
         return self.db.query(Employee).filter_by(id=employee_id).first()
+
+    def get_busy_employees(self) -> List[Employee]:
+        """ Get Busy Employees order by tasks"""
+        query = (
+            self.db.query(Employee)
+            .outerjoin(Task, Employee.id == Task.executor_id)
+            .group_by(Employee.id)
+            .order_by(func.count(Task.id).desc())
+            .options(joinedload(Employee.tasks))
+            .all())
+
+        return query
 
     def update_employee(self, employee_id: int, employee_schema: EmployeeUpdate) -> Union[Employee, None]:
         """ Update Employee """

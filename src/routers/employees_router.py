@@ -2,9 +2,9 @@ from typing import List, Type
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from db.database import get_db
-from crud.employees_crud import EmployeeCRUD
-from schemas.employees_schemas import EmployeeRead, EmployeeCreate, EmployeeUpdate
+from src.db.database import get_db
+from src.crud.employees_crud import EmployeeCRUD
+from src.schemas.employees_schemas import EmployeeRead, EmployeeCreate, EmployeeUpdate
 
 router = APIRouter(
     prefix="/employees",
@@ -45,6 +45,19 @@ def get_employee(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRea
         if employee is None:
             raise HTTPException(status_code=404, detail='Employee not found')
         return employee
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/busy_employees", response_model=List[EmployeeRead])
+def get_busy_employees(db: Session = Depends(get_db)) -> List[EmployeeRead]:
+    """ Get Busy Employees """
+    try:
+        employee_crud = EmployeeCRUD(db=db)
+        busy_employees = employee_crud.get_busy_employees()
+        if not busy_employees:
+            raise HTTPException(status_code=404, detail='Busy employees not found')
+        return busy_employees
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
