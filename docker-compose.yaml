@@ -11,8 +11,8 @@ services:
       POSTGRES_USER: postgres
     ports:
       - "5433:5432"
-    healthcheck: # Настройки проверки состояния
-      test: [ "CMD-SHELL", "pg_isready" ]  # Команда для проверки состояния сервиса
-      interval: 10s  # Интервал между проверками
-      timeout: 5s  # Время ожидания проверки
-      retries: 5  # Количество попыток пройти про
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
