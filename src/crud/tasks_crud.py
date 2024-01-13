@@ -47,7 +47,7 @@ class TaskCRUD:
         return task
 
     def get_important_tasks(self) -> List[ImportantTask]:
-        """  """
+        """ Get Important Tasks """
         important_tasks = (self.db.query(Task)
                            .filter(and_(Task.status == TaskStatus.NOT_STARTED,
                                         Task.subtasks.any(Task.status == TaskStatus.STARTED)))

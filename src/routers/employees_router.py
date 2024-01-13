@@ -49,7 +49,7 @@ def get_employee(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRea
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/busy_employees", response_model=List[EmployeeRead])
+@router.get("/busy_employees/", response_model=List[EmployeeRead])
 def get_busy_employees(db: Session = Depends(get_db)) -> List[EmployeeRead]:
     """ Get Busy Employees """
     try:

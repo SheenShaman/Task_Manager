@@ -17,7 +17,6 @@ class EmployeeCRUD:
         new_employee = Employee(name=employee_schema.name,
                                 position=employee_schema.position,
                                 is_busy=is_busy_value)
-        # new_employee = Employee(**employee_schema.model_dump(exclude_unset=True))
         self.db.add(new_employee)
         self.db.commit()
         self.db.refresh(new_employee)

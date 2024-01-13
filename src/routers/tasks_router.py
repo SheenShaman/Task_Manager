@@ -51,12 +51,12 @@ def get_task(task_id: int, db: Session = Depends(get_db)) -> TaskRead:
 
 @router.get('/important_tasks/', response_model=List[ImportantTask])
 def get_important_tasks(db: Session = Depends(get_db)) -> List[ImportantTask]:
-    """  """
+    """ Get Important Tasks """
     try:
         task_crud = TaskCRUD(db=db)
         important_tasks = task_crud.get_important_tasks()
         if not important_tasks:
-            raise HTTPException(status_code=404, detail='Important tasks not founded')
+            raise HTTPException(status_code=404, detail='Important tasks not found')
         return important_tasks
     except HTTPException as e:
         print(f"Exception details: {e.detail}")
